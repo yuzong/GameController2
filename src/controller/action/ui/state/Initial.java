@@ -31,6 +31,9 @@ public class Initial extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
+        if(data.gameState == GameControlData.STATE_INITIAL) {
+            return;
+        }
         data.gameState = GameControlData.STATE_INITIAL;
         Log.state(data, "State set to Initial");
     }

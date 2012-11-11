@@ -33,6 +33,9 @@ public class Set extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
+        if(data.gameState == GameControlData.STATE_SET) {
+            return;
+        }
         data.gameState = GameControlData.STATE_SET;
         ActionBoard.clock.resetPlayerPenTime(data);
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {

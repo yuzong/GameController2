@@ -33,6 +33,9 @@ public class Finish extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
+        if(data.gameState == GameControlData.STATE_FINISHED) {
+            return;
+        }
         data.gameState = GameControlData.STATE_FINISHED;
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
             if(data.firstHalf == GameControlData.C_TRUE) {

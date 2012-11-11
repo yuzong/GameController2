@@ -32,6 +32,9 @@ public class Ready extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
+        if(data.gameState == GameControlData.STATE_READY) {
+            return;
+        }
         data.gameState = GameControlData.STATE_READY;
         data.remainingReady = Rules.READY_TIME*1000;
         Log.state(data, "State set to Ready");

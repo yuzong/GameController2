@@ -31,6 +31,9 @@ public class Play extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
+        if(data.gameState == GameControlData.STATE_PLAYING) {
+            return;
+        }
         data.gameState = GameControlData.STATE_PLAYING;
         Log.state(data, "State set to Playing");
     }

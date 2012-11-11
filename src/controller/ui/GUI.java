@@ -31,11 +31,12 @@ public class GUI extends JFrame implements GCGUI
     private static final int WINDOW_HEIGHT = 768;
     private static final int STANDARD_FONT_SIZE = 18;
     private static final int TITLE_FONT_SIZE = 24;
-    private static final String STANDARD_FONT = "Dialog";
+    private static final String STANDARD_FONT = "Helvetica";
     private static final int GOALS_FONT_SIZE = 60;
     private static final int TIME_FONT_SIZE = 50;
     private static final int TIME_SUB_FONT_SIZE = 40;
     private static final int TIMEOUT_FONT_SIZE = 14;
+    private static final int STATE_FONT_SIZE = 12;
     private static final String WINDOW_TITLE = "GameController2";
     private static final String[][] BACKGROUND_SIDE = {{"config/icons/robot_left_blue.png",
                                                         "config/icons/robot_left_red.png"},
@@ -51,7 +52,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String HIGH_LATENCY = "config/icons/wlan_status_yellow.png";
     private static final String UNKNOWN_ONLINE_STATUS = "config/icons/wlan_status_grey.png";
     private static final String TIMEOUT = "Timeout";
-    private static final String STUCK = "Global Game Stuck";
+    private static final String STUCK = "Global<br/>Game<br/>Stuck";
     private static final String OUT = "Out";
     private static final String STATE_INITIAL = "Initial";
     private static final String STATE_READY = "Ready";
@@ -82,6 +83,11 @@ public class GUI extends JFrame implements GCGUI
     /** Some attributes used in the GUI components. */
     private Font standardFont;
     private Font titleFont;
+    private Font goalsFont;
+    private Font timeFont;
+    private Font timeSubFont;
+    private Font timeoutFont;
+    private Font stateFont;
     private SimpleDateFormat clockFormat = new SimpleDateFormat("m:ss");
     private ImageIcon clockImgReset;
     private ImageIcon clockImgPlay;
@@ -170,15 +176,12 @@ public class GUI extends JFrame implements GCGUI
             }
         }
         
-        standardFont = new Font(STANDARD_FONT, Font.PLAIN, STANDARD_FONT_SIZE);
-        titleFont = new Font(STANDARD_FONT, Font.PLAIN, TITLE_FONT_SIZE);
-        
         
         //Components
         side = new ImagePanel[2];
         for(int i=0; i<2; i++) {
             side[i] = new ImagePanel(backgroundSide[i][i].getImage());
-            side[i].setBackground(Color.WHITE);
+            side[i].setOpaque(true);
         }
         mid = new ImagePanel(new ImageIcon(BACKGROUND_MID).getImage());
         bottom = new ImagePanel(new ImageIcon(BACKGROUND_BOTTOM).getImage());
@@ -194,23 +197,17 @@ public class GUI extends JFrame implements GCGUI
         pushes = new JLabel[2];
         for(int i=0; i<2; i++) {
             name[i] = new JLabel(Teams.getNames(false)[data.team[i].teamNumber]);
-            name[i].setFont(titleFont);
             name[i].setHorizontalAlignment(JLabel.CENTER);
             name[i].setForeground(Rules.TEAM_COLOR[data.team[i].teamColor]);
             goalInc[i] = new JButton("+");
-            goalInc[i].setFont(standardFont);
             goalDec[i] = new JButton("-");
-            goalDec[i].setFont(standardFont);
             kickOff[i] = new JRadioButton(KICKOFF);
             kickOff[i].setOpaque(false);
-            kickOff[i].setFont(standardFont);
             kickOff[i].setHorizontalAlignment(JLabel.CENTER);
             kickOffGroup.add(kickOff[i]);
             goals[i] = new JLabel("0");
-            goals[i].setFont(goalInc[i].getFont().deriveFont((float)GOALS_FONT_SIZE));
             goals[i].setHorizontalAlignment(JLabel.CENTER);
             pushes[i] = new JLabel("0");
-            pushes[i].setFont(standardFont);
             pushes[i].setHorizontalAlignment(JLabel.CENTER);
         }
         //  robots
@@ -230,7 +227,6 @@ public class GUI extends JFrame implements GCGUI
                 robot[i][j].setLayout(new FlowLayout(FlowLayout.CENTER));
                 robotLabel[i][j] = new JLabel();
                 robotLabel[i][j].setPreferredSize(robotsLabelDim);
-                robotLabel[i][j].setFont(titleFont);
                 robotLabel[i][j].setHorizontalAlignment(JLabel.CENTER);
                 robot[i][j].add(robotLabel[i][j]);
                 lanIcon[i][j] = lanUnknown;
@@ -248,10 +244,8 @@ public class GUI extends JFrame implements GCGUI
         out = new JButton[2];
         for(int i=0; i<2; i++) {
             timeOut[i] = new JButton();
-            timeOut[i].setFont(timeOut[i].getFont().deriveFont((float)TIMEOUT_FONT_SIZE));
             stuck[i] = new JButton();
             out[i] = new JButton(OUT);
-            out[i].setFont(standardFont);
         }
         
         //--mid--
@@ -259,19 +253,15 @@ public class GUI extends JFrame implements GCGUI
         clockReset = new ImageButton(clockImgReset.getImage());
         clockReset.setOpaque(false);
         clockReset.setBorder(null);
-        clockReset.setFont(titleFont);
         clockContainer = new ImagePanel(new ImageIcon(BACKGROUND_CLOCK).getImage());
         clockContainer.setOpaque(false);
         clock = new JLabel("10:00");
-        clock.setFont(clock.getFont().deriveFont((float)TIME_FONT_SIZE));
         clock.setForeground(Color.WHITE);
         clock.setHorizontalAlignment(JLabel.CENTER);
         clockPause = new ImageButton(clockImgReset.getImage());
         clockPause.setOpaque(false);
         clockPause.setBorder(null);
-        clockPause.setFont(titleFont);
         clockSub = new JLabel("0:00");
-        clockSub.setFont(clockSub.getFont().deriveFont((float)TIME_SUB_FONT_SIZE));
         clockSub.setHorizontalAlignment(JLabel.CENTER);
         firstHalf = new JToggleButton(FIRST_HALF);
         firstHalf.setSelected(true);
@@ -296,21 +286,13 @@ public class GUI extends JFrame implements GCGUI
         stateGroup.add(finish);
         //  penalties
         penPushing = new JButton(PEN_PUSHING);
-        penPushing.setFont(standardFont);
         penLeaving = new JButton(PEN_LEAVING);
-        penLeaving.setFont(standardFont);
         penFallen = new JButton(PEN_FALLEN);
-        penFallen.setFont(standardFont);
         penInactive = new JButton(PEN_INACTIVE);
-        penInactive.setFont(standardFont);
         penDefender = new JButton(PEN_DEFENDER);
-        penDefender.setFont(standardFont);
         penHolding = new JButton(PEN_HOLDING);
-        penHolding.setFont(standardFont);
         penHands = new JButton(PEN_HANDS);
-        penHands.setFont(standardFont);
         penPickup = new JButton(PEN_PICKUP);
-        penPickup.setFont(standardFont);
         
         //--bottom--
         //  log
@@ -334,8 +316,8 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.91, .05, .08, .07, goalInc[1]);
         layout.add(.01, .13, .08, .06, goalDec[0]);
         layout.add(.91, .13, .08, .06, goalDec[1]);
-        layout.add(.21, .05, .08, .04, kickOff[0]);
-        layout.add(.71, .05, .08, .04, kickOff[1]);
+        layout.add(.17, .05, .12, .04, kickOff[0]);
+        layout.add(.71, .05, .12, .04, kickOff[1]);
         layout.add(.21, .09, .08, .07, goals[0]);
         layout.add(.71, .09, .08, .07, goals[1]);
         layout.add(.21, .16, .08, .04, pushes[0]);
@@ -349,7 +331,7 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.20, .77, .09, .09, out[0]);
         layout.add(.71, .77, .09, .09, out[1]);
         layout.add(.31, .0, .08, .11, clockReset);
-        layout.add(.4, .01, .2, .10, clock);
+        layout.add(.4, .012, .2, .10, clock);
         layout.add(.4, .0, .2, .11, clockContainer);
         layout.add(.61, .0, .08, .11, clockPause);
         layout.add(.4, .11, .2, .07, clockSub);
@@ -416,6 +398,8 @@ public class GUI extends JFrame implements GCGUI
             devices[0].setFullScreenWindow(this);
         }
         
+        updateFonts();
+        
         setVisible(true);
     }
     
@@ -458,7 +442,8 @@ public class GUI extends JFrame implements GCGUI
         public void paintComponent(Graphics g)
         {
             if(super.isOpaque()) {
-                g.clearRect(0, 0, getWidth(), getHeight());
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, getWidth(), getHeight());
             }
             g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         }
@@ -537,6 +522,7 @@ public class GUI extends JFrame implements GCGUI
         updateOut(data);
         updatePenalties(data);
         updateUndo(data);
+        updateFonts();
         repaint();
     }
     
@@ -827,6 +813,55 @@ public class GUI extends JFrame implements GCGUI
         }
         for(int i=0; i<undo.length; i++) {
             highlight(undo[i], (hightlightEvent == ActionBoard.undo[i+1]) && (!ActionBoard.undo[i+1].executed));
+        }
+    }
+    
+    private void updateFonts()
+    {
+        double size = Math.min((getWidth()/(double)WINDOW_WIDTH), (getHeight()/(double)WINDOW_HEIGHT));
+        
+        titleFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TITLE_FONT_SIZE*(size)));
+        standardFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_SIZE*(size)));
+        goalsFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(GOALS_FONT_SIZE*(size)));
+        timeFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TIME_FONT_SIZE*(size)));
+        timeSubFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TIME_SUB_FONT_SIZE*(size)));
+        timeoutFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TIMEOUT_FONT_SIZE*(size)));
+        stateFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STATE_FONT_SIZE*(size)));
+        
+        for(int i=0; i<=1; i++) {
+            name[i].setFont(titleFont);
+            goalInc[i].setFont(standardFont);
+            goalDec[i].setFont(standardFont);
+            kickOff[i].setFont(standardFont);
+            goals[i].setFont(goalsFont);
+            pushes[i].setFont(standardFont);
+            for(int j=0; j<robot[i].length; j++) {
+                robotLabel[i][j].setFont(titleFont);
+            }
+            timeOut[i].setFont(timeoutFont);
+            stuck[i].setFont(timeoutFont);
+            out[i].setFont(standardFont);
+        }
+        clock.setFont(timeFont);
+        clockSub.setFont(timeSubFont);
+        firstHalf.setFont(timeoutFont);
+        secondHalf.setFont(timeoutFont);
+        penaltyShoot.setFont(timeoutFont);
+        initial.setFont(stateFont);
+        ready.setFont(stateFont);
+        set.setFont(stateFont);
+        play.setFont(stateFont);
+        finish.setFont(stateFont);
+        penPushing.setFont(standardFont);
+        penLeaving.setFont(standardFont);
+        penFallen.setFont(standardFont);
+        penInactive.setFont(standardFont);
+        penDefender.setFont(standardFont);
+        penHolding.setFont(standardFont);
+        penHands.setFont(standardFont);
+        penPickup.setFont(standardFont);
+        for(int i=0; i<undo.length; i++) {
+            undo[i].setFont(timeoutFont);
         }
     }
     

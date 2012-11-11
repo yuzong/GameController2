@@ -1,8 +1,9 @@
 package controller.ui;
 
-import data.Rules;
 import data.Teams;
+import java.awt.BorderLayout;
 import java.awt.Checkbox;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -99,14 +100,14 @@ public class StartInput extends JFrame implements Serializable
         for(int i=0; i<2; i++) {
             teamContainer[i] = new ImagePanel((new ImageIcon(BACKGROUND_SIDE[i])).getImage());
             teamContainer[i].setPreferredSize(new Dimension(WINDOW_WIDTH/2-STANDARD_SPACE, TEAMS_HEIGHT));
-            teamContainer[i].setBackground(Rules.TEAM_COLOR[i]);
+            teamContainer[i].setOpaque(true);
+            teamContainer[i].setLayout(new BorderLayout());
             add(teamContainer[i]);
-            teamIcon[i] = new ImageIcon(Teams.getIcon(0));
-            teamIcon[i].setImage(teamIcon[i].getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_DEFAULT));
+            setTeamIcon(i, 0);
             teamIconLabel[i] = new JLabel(teamIcon[i]);
-            teamContainer[i].add(teamIconLabel[i]);
+            teamContainer[i].add(teamIconLabel[i], BorderLayout.CENTER);
             team[i] = new JComboBox(Teams.getNames(true));
-            teamContainer[i].add(team[i]);
+            teamContainer[i].add(team[i], BorderLayout.SOUTH);
         }
         team[0].addActionListener(new ActionListener()
             {
@@ -114,8 +115,7 @@ public class StartInput extends JFrame implements Serializable
                 public void actionPerformed(ActionEvent e)
                 {
                     outTeam[0] = Integer.valueOf(((String)team[0].getSelectedItem()).split(": ")[0]);
-                    teamIcon[0].setImage(Teams.getIcon(outTeam[0]));
-                    teamIcon[0].setImage(teamIcon[0].getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_DEFAULT));
+                    setTeamIcon(0, outTeam[0]);
                     teamIconLabel[0].setIcon(teamIcon[0]);
                     teamIconLabel[0].repaint();
                     teamsOK = outTeam[0] != outTeam[1];
@@ -129,8 +129,7 @@ public class StartInput extends JFrame implements Serializable
                 public void actionPerformed(ActionEvent e)
                 {
                     outTeam[1] = Integer.valueOf(((String)team[1].getSelectedItem()).split(": ")[0]);
-                    teamIcon[1].setImage(Teams.getIcon(outTeam[1]));
-                    teamIcon[1].setImage(teamIcon[1].getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_DEFAULT));
+                    setTeamIcon(1, outTeam[1]);
                     teamIconLabel[1].setIcon(teamIcon[1]);
                     teamIconLabel[1].repaint();
                     teamsOK = outTeam[1] != outTeam[0];
@@ -189,6 +188,27 @@ public class StartInput extends JFrame implements Serializable
     }
     
     /**
+     * Sets the Team-Icon on the GUI.
+     * 
+     * @param side      The side (0=left, 1=right)
+     * @param team      The number of the Team
+     */ 
+    private void setTeamIcon(int side, int team)
+    {
+        teamIcon[side] = new ImageIcon(Teams.getIcon(team));
+            float scale_factor;
+            if(teamIcon[side].getImage().getWidth(null) > teamIcon[side].getImage().getHeight(null)) {
+                scale_factor = (float)IMAGE_SIZE/teamIcon[side].getImage().getWidth(null);
+            } else {
+                scale_factor = (float)IMAGE_SIZE/teamIcon[side].getImage().getHeight(null);
+            }
+            teamIcon[side].setImage(teamIcon[side].getImage().getScaledInstance(
+                    (int)(teamIcon[side].getImage().getWidth(null)*scale_factor),
+                    (int)(teamIcon[side].getImage().getHeight(null)*scale_factor),
+                    Image.SCALE_DEFAULT));
+    }
+    
+    /**
      * Enables the start button, if the conditions are ok.
      */
     private void startEnableing()
@@ -235,7 +255,8 @@ public class StartInput extends JFrame implements Serializable
         public void paintComponent(Graphics g)
         {
             if(super.isOpaque()) {
-                g.clearRect(0, 0, getWidth(), getHeight());
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, getWidth(), getHeight());
             }
             g.drawImage(image, 0, 0, image.getWidth(null), image.getHeight(null), null);
         }
