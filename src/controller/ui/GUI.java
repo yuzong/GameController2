@@ -216,25 +216,22 @@ public class GUI extends JFrame implements GCGUI
         robotLabel = new JLabel[2][Rules.TEAM_SIZE];
         lanIcon = new ImageIcon[2][Rules.TEAM_SIZE];
         robotTime = new JProgressBar[2][Rules.TEAM_SIZE];
-        Dimension robotsLabelDim = new Dimension(400, 32);
-        Dimension robotsProgressDim = new Dimension(200, 20);
         for(int i=0; i<2; i++) {
             robots[i] = new JPanel();
             robots[i].setLayout(new GridLayout(robot[i].length, 1, 0, 10));
             robots[i].setOpaque(false);
             for(int j=0; j<robot[i].length; j++) {
                 robot[i][j] = new JButton();
-                robot[i][j].setLayout(new FlowLayout(FlowLayout.CENTER));
                 robotLabel[i][j] = new JLabel();
-                robotLabel[i][j].setPreferredSize(robotsLabelDim);
                 robotLabel[i][j].setHorizontalAlignment(JLabel.CENTER);
-                robot[i][j].add(robotLabel[i][j]);
                 lanIcon[i][j] = lanUnknown;
                 robotLabel[i][j].setIcon(lanIcon[i][j]);
                 robotTime[i][j] = new JProgressBar();
-                robotTime[i][j].setPreferredSize(robotsProgressDim);
-                robot[i][j].add(robotTime[i][j]);
                 robotTime[i][j].setVisible(false);
+                TotalScaleLayout robotLayout = new TotalScaleLayout(robot[i][j]);
+                robot[i][j].setLayout(robotLayout);
+                robotLayout.add(.1, .1, .8, .5, robotLabel[i][j]);
+                robotLayout.add(.1, .7, .8, .2, robotTime[i][j]);
                 robots[i].add(robot[i][j]);
             }
         }

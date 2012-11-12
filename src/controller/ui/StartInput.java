@@ -258,7 +258,7 @@ public class StartInput extends JFrame implements Serializable
                 g.setColor(Color.WHITE);
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
-            g.drawImage(image, 0, 0, image.getWidth(null), image.getHeight(null), null);
+            g.drawImage(image, (getWidth()-image.getWidth(null))/2, 0, image.getWidth(null), image.getHeight(null), null);
         }
     }
 }
