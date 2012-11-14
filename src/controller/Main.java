@@ -10,11 +10,10 @@ import controller.ui.StartInput;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Teams;
-
-import javax.swing.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.*;
 
 
 /**
@@ -30,7 +29,7 @@ public class Main
      * Actually there are no dependencies, but this should be the first thing
      * to be written into the log file.
      */
-    public static final String version = "GC2 0.9";
+    public static final String version = "GC2 1.0";
     
     /**
      * The programm starts here.
