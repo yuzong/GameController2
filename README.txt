@@ -1,5 +1,6 @@
 This is the GameController2 made by team B-Human for the RoboCup SPL.
 
+
 ########## 1. Building from Source ##########
 
 To build it from the source code you may use Apache Ant.
@@ -14,9 +15,11 @@ There are three ant targets:
 - distribute
 	creates a jar package and stores it in /build/jar
 
+	
 ########## 2. Executing the Jar ##########
 
 After executing the target distribute just run java -jar GameController2.jar	
+
 
 ########## 3. Shortcuts ##########
 
@@ -53,6 +56,14 @@ V	- ball holding
 B	- playing with hands
 N	- request for pickup
 
+
 ########## 4. Misc ##########
 
-The packages which the GameController2 sends and may receive from robots are defined in RoboCupGameControlData.h. We did not change this and neither are we responsible for it.
+The format of the packets the GameController2 broadcasts and receives is defined in the file RoboCupGameControlData.h, which is identical to the one that comes with the official GameController 2012 that can be downloaded from the SPL website.
+
+
+########## 5. Known Issues ##########
+
+On OS X, notifications visualized by changing a button color, e.g., when a robot is due to be returned to the field are invisible. This also includes preselecting an entry in the history for the undo command.
+
+The Humanoid League is not supported yet.
