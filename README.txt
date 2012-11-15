@@ -1,8 +1,24 @@
 This is the GameController2 made by team B-Human for the RoboCup SPL.
 
-To build it from the source-code you may use Apache Ant.
+########## 1. Building from Source ##########
 
-The packages which the GameController2 sends and may receive from robots are defined in RoboCupGameControlData.h. We did not change this and neither are we responsible for it.
+To build it from the source code you may use Apache Ant.
+There are three ant targets:
+
+- clean
+	cleans up the project folder
+
+- compile
+	compiles the code and stores files in /build/classes
+	
+- distribute
+	creates a jar package and stores it in /build/jar
+
+########## 2. Executing the Jar ##########
+
+After executing the target distribute just run java -jar GameController2.jar	
+
+########## 3. Shortcuts ##########
 
 While the GameController2 is running, you may use the following keys on the keyboard instead of pushing buttons:
 
@@ -36,3 +52,7 @@ C	- illegal defender
 V	- ball holding
 B	- playing with hands
 N	- request for pickup
+
+########## 4. Misc ##########
+
+The packages which the GameController2 sends and may receive from robots are defined in RoboCupGameControlData.h. We did not change this and neither are we responsible for it.
