@@ -5,6 +5,7 @@ import controller.Log;
 import controller.action.ActionType;
 import data.AdvancedData;
 import data.GameControlData;
+import data.Rules;
 
 
 /**
@@ -35,6 +36,7 @@ public class Play extends GCAction
             return;
         }
         data.gameState = GameControlData.STATE_PLAYING;
+        data.remainingKickoffBlocked = Rules.KICKOFF_TIME*1000;
         Log.state(data, "State set to Playing");
     }
     

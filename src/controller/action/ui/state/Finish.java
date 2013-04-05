@@ -61,7 +61,9 @@ public class Finish extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_PLAYING)
+        return (data.gameState == GameControlData.STATE_READY)
+            || (data.gameState == GameControlData.STATE_SET)
+            || (data.gameState == GameControlData.STATE_PLAYING)
             || (data.gameState == GameControlData.STATE_FINISHED)
             || data.testmode;
     }

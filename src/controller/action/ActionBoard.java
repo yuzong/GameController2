@@ -13,6 +13,7 @@ import controller.action.ui.Robot;
 import controller.action.ui.Testmode;
 import controller.action.ui.TimeOut;
 import controller.action.ui.Undo;
+import controller.action.ui.CancelUndo;
 import controller.action.ui.half.FirstHalf;
 import controller.action.ui.half.PenaltyShoot;
 import controller.action.ui.half.SecondHalf;
@@ -52,6 +53,7 @@ public class ActionBoard
     public static Quit quit;
     public static Testmode testmode;
     public static Undo[] undo;
+    public static CancelUndo cancelUndo;
     public static final int MAX_NUM_UNDOS_AT_ONCE = 8;
     
     public static Goal[] goalDec = new Goal[2];
@@ -98,7 +100,8 @@ public class ActionBoard
         for(int i=0; i<undo.length; i++) {
             undo[i] = new Undo(i);
         }
-        
+        cancelUndo = new CancelUndo();
+      
         for(int i=0; i<2; i++) {
             goalDec[i] = new Goal(i, -1);
             goalInc[i] = new Goal(i, 1);

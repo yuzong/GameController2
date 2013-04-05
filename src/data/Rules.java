@@ -22,6 +22,8 @@ public class Rules
     public static final int READY_TIME = 45;
     /** Time in seconds between first and second half. */
     public static final int PAUSE_TIME = 10*60;
+    /** Time in seconds the ball is blocked after kickoff. */
+    public static final int KICKOFF_TIME = 10;
     /** Time in seconds between second half and penalty shoot. */
     public static final int PAUSE_PENALTY_SHOOT_TIME = 5*60;
     /** Time in seconds one penalty shoot is long. */

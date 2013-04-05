@@ -27,6 +27,7 @@ public class GUI extends JFrame implements GCGUI
      * Some constants defining this GUI`s appearance as their names say.
      * Feel free to change them and see what happens.
      */
+    private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     private static final int WINDOW_WIDTH = 1024;
     private static final int WINDOW_HEIGHT = 768;
     private static final int STANDARD_FONT_SIZE = 18;
@@ -73,13 +74,15 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_HOLDING = "Ball Holding";
     private static final String PEN_HANDS = "Hands";
     private static final String PEN_PICKUP = "Pick-Up";
+    private static final String CANCEL = "Cancel";
     private static final String BACKGROUND_BOTTOM = "config/icons/timeline_ground.png";
-    private static final Color COLOR_HIGHTLIGHT = Color.YELLOW;
+    private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
     private static final Color COLOR_STANDARD = (new JButton()).getBackground();
-    private static final int UNPEN_HIGHTLIGHT_SECONDS = 7;
-    private static final int TIMEOUT_HIGHTLIGHT_SECONDS = 10;
-    private static final int FINISH_HIGHTLIGHT_SECONDS = 10;
-    
+    private static final int UNPEN_HIGHLIGHT_SECONDS = 7;
+    private static final int TIMEOUT_HIGHLIGHT_SECONDS = 10;
+    private static final int FINISH_HIGHLIGHT_SECONDS = 10;
+    private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
+  
     /** Some attributes used in the GUI components. */
     private Font standardFont;
     private Font titleFont;
@@ -112,7 +115,7 @@ public class GUI extends JFrame implements GCGUI
     private JLabel[][] robotLabel;
     private ImageIcon[][] lanIcon;
     private JProgressBar[][] robotTime;
-    private JButton[] timeOut;
+    private JToggleButton[] timeOut;
     private JButton[] stuck;
     private JButton[] out;
     private JPanel mid;
@@ -131,18 +134,19 @@ public class GUI extends JFrame implements GCGUI
     private JToggleButton secondHalf;
     private JToggleButton penaltyShoot;
     private ButtonGroup halfGroup;
-    private JButton penPushing;
-    private JButton penLeaving;
-    private JButton penFallen;
-    private JButton penInactive;
-    private JButton penDefender;
-    private JButton penHolding;
-    private JButton penHands;
-    private JButton penPickup;
+    private JToggleButton penPushing;
+    private JToggleButton penLeaving;
+    private JToggleButton penFallen;
+    private JToggleButton penInactive;
+    private JToggleButton penDefender;
+    private JToggleButton penHolding;
+    private JToggleButton penHands;
+    private JToggleButton penPickup;
     private ImagePanel bottom;
     private JPanel log;
-    private JButton[] undo;
-            
+    private JToggleButton[] undo;
+    private JButton cancelUndo;
+  
     
     /**
      * Creates a new GUI.
@@ -236,11 +240,11 @@ public class GUI extends JFrame implements GCGUI
             }
         }
         //  team
-        timeOut = new JButton[2];
+        timeOut = new JToggleButton[2];
         stuck = new JButton[2];
         out = new JButton[2];
         for(int i=0; i<2; i++) {
-            timeOut[i] = new JButton();
+            timeOut[i] = new JToggleButton();
             stuck[i] = new JButton();
             out[i] = new JButton(OUT);
         }
@@ -282,27 +286,29 @@ public class GUI extends JFrame implements GCGUI
         stateGroup.add(play);
         stateGroup.add(finish);
         //  penalties
-        penPushing = new JButton(PEN_PUSHING);
-        penLeaving = new JButton(PEN_LEAVING);
-        penFallen = new JButton(PEN_FALLEN);
-        penInactive = new JButton(PEN_INACTIVE);
-        penDefender = new JButton(PEN_DEFENDER);
-        penHolding = new JButton(PEN_HOLDING);
-        penHands = new JButton(PEN_HANDS);
-        penPickup = new JButton(PEN_PICKUP);
+        penPushing = new JToggleButton(PEN_PUSHING);
+        penLeaving = new JToggleButton(PEN_LEAVING);
+        penFallen = new JToggleButton(PEN_FALLEN);
+        penInactive = new JToggleButton(PEN_INACTIVE);
+        penDefender = new JToggleButton(PEN_DEFENDER);
+        penHolding = new JToggleButton(PEN_HOLDING);
+        penHands = new JToggleButton(PEN_HANDS);
+        penPickup = new JToggleButton(PEN_PICKUP);
         
         //--bottom--
         //  log
         log = new JPanel();
         log.setOpaque(false);
         log.setLayout(new GridLayout(1, ActionBoard.MAX_NUM_UNDOS_AT_ONCE-1, 10, 0));
-        undo = new JButton[ActionBoard.MAX_NUM_UNDOS_AT_ONCE-1];
+        undo = new JToggleButton[ActionBoard.MAX_NUM_UNDOS_AT_ONCE-1];
         for(int i=undo.length-1; i>=0; i--) {
-            undo[i] = new JButton();
+            undo[i] = new JToggleButton();
             undo[i].setVisible(false);
             log.add(undo[i]);
         }
-        
+        cancelUndo = new JButton(CANCEL);
+        cancelUndo.setVisible(false);
+      
         //--layout--
         TotalScaleLayout layout = new TotalScaleLayout(this);
         setLayout(layout);
@@ -349,10 +355,11 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.31, .73, .185, .11, penHands);
         layout.add(.505, .73, .185, .11, penPickup);
         layout.add(.08, .88, .84, .11, log);
+        layout.add(.925, .88, .07, .11, cancelUndo);
         layout.add(0, 0, .3, .87, side[0]);
         layout.add(.3, 0, .4, .87, mid);
         layout.add(.7, 0, .3, .87, side[1]);
-        layout.add(0, .87, 1, .13, bottom);
+        layout.add(0, .87, 1, .132, bottom);
         
         //--listener--
         for(int i=0; i<2; i++) {
@@ -387,7 +394,8 @@ public class GUI extends JFrame implements GCGUI
         for(int i=0; i<undo.length; i++) {
             undo[i].addActionListener(ActionBoard.undo[i+1]);
         }
-        
+        cancelUndo.addActionListener(ActionBoard.cancelUndo);
+      
         //fullscreen
         if(fullscreen) {
             setUndecorated(true);
@@ -531,18 +539,26 @@ public class GUI extends JFrame implements GCGUI
     private void updateClock(AdvancedData data)
     {
         if(data.extraTime == 0) {
-            clock.setText(clockFormat.format(new Date(data.secsRemaining*1000)));
+            clock.setText(clockFormat.format(new Date(data.secsRemaining*1000+999)));
         } else {
             clock.setText("-" + clockFormat.format(new Date(data.extraTime*1000)));
         }
 
         if(data.gameState == GameControlData.STATE_READY) {
             clockSub.setText(clockFormat.format(new Date(data.remainingReady+999)));
+            clockSub.setForeground(Color.BLACK);
         } else if( (data.gameState == GameControlData.STATE_FINISHED)
                 && (data.secGameState == GameControlData.STATE2_NORMAL) ) {
             clockSub.setText(clockFormat.format(new Date(data.remainingPaused+999)));
+            clockSub.setForeground(Color.BLACK);
+        } else if( (data.gameState == GameControlData.STATE_PLAYING)
+                && (data.remainingKickoffBlocked >= -KICKOFF_BLOCKED_HIGHLIGHT_SECONDS*1000) ) {
+            clockSub.setText(clockFormat.format(new Date(Math.max(0, data.remainingKickoffBlocked+999))));
+            clockSub.setForeground(data.remainingKickoffBlocked < 0
+                    && clockSub.getForeground() != COLOR_HIGHLIGHT ? COLOR_HIGHLIGHT : Color.BLACK);
         } else {
             clockSub.setText("");
+            clockSub.setForeground(Color.BLACK);
         }
         ImageIcon tmp;
         if(ActionBoard.clock.isClockRunning(data)) {
@@ -616,12 +632,8 @@ public class GUI extends JFrame implements GCGUI
                 finish.setSelected(true);
                 break;
         }
-        if( (data.secsRemaining <= FINISH_HIGHTLIGHT_SECONDS)
-         && (finish.getBackground() != COLOR_HIGHTLIGHT) ) {
-            finish.setBackground(COLOR_HIGHTLIGHT);
-        } else {
-            finish.setBackground(COLOR_STANDARD);
-        }
+        highlight(finish, (data.secsRemaining <= FINISH_HIGHLIGHT_SECONDS)
+                && (finish.getBackground() != COLOR_HIGHLIGHT) );
     }
     
     /**
@@ -691,14 +703,11 @@ public class GUI extends JFrame implements GCGUI
                     robotTime[i][j].setVisible(false);
                 }
                 robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
-                if( (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE)
-                 && (data.team[i].player[j].penalty != PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
-                 && (data.team[i].player[j].secsTillUnpenalised <= UNPEN_HIGHTLIGHT_SECONDS)
-                 && (robot[i][j].getBackground() != COLOR_HIGHTLIGHT) ) {
-                    robot[i][j].setBackground(COLOR_HIGHTLIGHT);
-                } else {
-                    robot[i][j].setBackground(COLOR_STANDARD);
-                }
+                highlight(robot[i][j],
+                        (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE)
+                        && (data.team[i].player[j].penalty != PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
+                        && (data.team[i].player[j].secsTillUnpenalised <= UNPEN_HIGHLIGHT_SECONDS)
+                        && (robot[i][j].getBackground() != COLOR_HIGHLIGHT) );
                 ImageIcon currentLanIcon;
                 if(onlineStatus[i][j] == RobotOnlineStatus.ONLINE) {
                     currentLanIcon = lanOnline;
@@ -724,15 +733,14 @@ public class GUI extends JFrame implements GCGUI
         for(int i=0; i<2; i++) {
             if(!data.timeOutActive[i]) {
                 timeOut[i].setText(TIMEOUT);
-                timeOut[i].setBackground(COLOR_STANDARD);
+                timeOut[i].setSelected(false);
+                highlight(timeOut[i], false);
             } else {
                 timeOut[i].setText(clockFormat.format(new Date(data.timeOut[i])));
-                if( (data.timeOut[i]/1000 <= TIMEOUT_HIGHTLIGHT_SECONDS)
-                 && (timeOut[i].getBackground() != COLOR_STANDARD) ) {
-                    timeOut[i].setBackground(COLOR_STANDARD);
-                } else {
-                    timeOut[i].setBackground(COLOR_HIGHTLIGHT);
-                }
+                boolean shouldHighlight = (data.timeOut[i]/1000 < TIMEOUT_HIGHLIGHT_SECONDS)
+                        && (timeOut[i].getBackground() != COLOR_HIGHLIGHT);
+                timeOut[i].setSelected(!IS_OSX || !shouldHighlight);
+                highlight(timeOut[i], shouldHighlight);
             }
             timeOut[i].setEnabled(ActionBoard.timeOut[i].isLegal(data));
         }
@@ -785,14 +793,14 @@ public class GUI extends JFrame implements GCGUI
         penPickup.setEnabled(ActionBoard.pickUp.isLegal(data));
         
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
-        highlight(penPushing, hightlightEvent == ActionBoard.pushing);
-        highlight(penLeaving, hightlightEvent == ActionBoard.leaving);
-        highlight(penFallen, hightlightEvent == ActionBoard.fallen);
-        highlight(penInactive, hightlightEvent == ActionBoard.inactive);
-        highlight(penDefender, hightlightEvent == ActionBoard.defender);
-        highlight(penHolding, hightlightEvent == ActionBoard.holding);
-        highlight(penHands, hightlightEvent == ActionBoard.hands);
-        highlight(penPickup, hightlightEvent == ActionBoard.pickUp);
+        penPushing.setSelected(hightlightEvent == ActionBoard.pushing);
+        penLeaving.setSelected(hightlightEvent == ActionBoard.leaving);
+        penFallen.setSelected(hightlightEvent == ActionBoard.fallen);
+        penInactive.setSelected(hightlightEvent == ActionBoard.inactive);
+        penDefender.setSelected(hightlightEvent == ActionBoard.defender);
+        penHolding.setSelected(hightlightEvent == ActionBoard.holding);
+        penHands.setSelected(hightlightEvent == ActionBoard.hands);
+        penPickup.setSelected(hightlightEvent == ActionBoard.pickUp);
     }
     
     /**
@@ -802,15 +810,23 @@ public class GUI extends JFrame implements GCGUI
      */
     private void updateUndo(AdvancedData data)
     {
-        GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
+        GCAction highlightEvent = EventHandler.getInstance().lastUIEvent;
         String[] undos = Log.getLast(ActionBoard.MAX_NUM_UNDOS_AT_ONCE);
-        for(int i=0; i<undo.length; i++) {
-            undo[i].setText("<html><center>"+undos[i]);
+        boolean undoFromHere = false;
+        for(int i=undo.length - 1; i >= 0; i--) {
             undo[i].setVisible(!undos[i].equals(""));
+            undo[i].setEnabled(!undos[i].contains(" vs "));
+            if ((highlightEvent == ActionBoard.undo[i+1]) && (!ActionBoard.undo[i+1].executed))
+                undoFromHere = true;
+            if (undoFromHere) {
+                undo[i].setText("<html><center>Undo '"+undos[i] + "\'?");
+                undo[i].setSelected(true);
+            } else {
+                undo[i].setText("<html><center>"+undos[i]);
+                undo[i].setSelected(false);
+            }
         }
-        for(int i=0; i<undo.length; i++) {
-            highlight(undo[i], (hightlightEvent == ActionBoard.undo[i+1]) && (!ActionBoard.undo[i+1].executed));
-        }
+        cancelUndo.setVisible(undoFromHere);
     }
     
     private void updateFonts()
@@ -860,6 +876,7 @@ public class GUI extends JFrame implements GCGUI
         for(int i=0; i<undo.length; i++) {
             undo[i].setFont(timeoutFont);
         }
+        cancelUndo.setFont(standardFont);
     }
     
     /**
@@ -868,8 +885,12 @@ public class GUI extends JFrame implements GCGUI
      * @param button        The button to highlight.
      * @param highlight     If the button should be highlighted.
      */
-    private void highlight(JButton button, boolean highlight)
+    private void highlight(AbstractButton button, boolean highlight)
     {
-        button.setBackground(highlight ? COLOR_HIGHTLIGHT : COLOR_STANDARD);
+        button.setBackground(highlight ? COLOR_HIGHLIGHT : COLOR_STANDARD);
+        if (IS_OSX) {
+            button.setOpaque(highlight);
+            button.setBorderPainted(!highlight);
+        }
     }
 }

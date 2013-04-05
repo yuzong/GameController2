@@ -93,8 +93,7 @@ public class ClockTick extends GCAction
                     data.timeOut[i] = Math.max(0, data.timeOut[i] - timeElapsed);
                 }
             }
-            if( (data.gameState == GameControlData.STATE_READY)
-             && !data.manPause ) {
+            if(data.gameState == GameControlData.STATE_READY) {
                 data.remainingReady -= timeElapsed;
                 if(data.remainingReady <= 0) {
                     ActionBoard.set.perform(data);
@@ -102,8 +101,7 @@ public class ClockTick extends GCAction
             }
 
             if( (data.gameState == GameControlData.STATE_FINISHED)
-             && (data.secGameState == GameControlData.STATE2_NORMAL)
-             && !data.manPause) {
+             && (data.secGameState == GameControlData.STATE2_NORMAL) ) {
                 data.remainingPaused -= timeElapsed;
                 if(data.remainingPaused <= 0) {
                     if(data.firstHalf == GameControlData.C_TRUE) {
@@ -112,6 +110,10 @@ public class ClockTick extends GCAction
                         ActionBoard.penaltyShoot.perform(data);
                     }
                 }
+            }
+            
+            if(data.gameState == GameControlData.STATE_PLAYING) {
+                data.remainingKickoffBlocked -= timeElapsed;
             }
         }
     }

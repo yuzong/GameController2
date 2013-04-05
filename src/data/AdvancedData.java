@@ -30,7 +30,9 @@ public class AdvancedData extends GameControlData
     public long remainingReady = Rules.READY_TIME*1000;
     /** Time in millis remaining between first and second half. */
     public long remainingPaused = Rules.PAUSE_TIME*1000;
-    /** Time in millis remaining to be penelized for each layer. */
+    /** Time in millis remaining until ball is unblocked after kickoff. */
+    public long remainingKickoffBlocked = Rules.KICKOFF_TIME*1000;
+    /** Time in millis remaining to be penalized for each layer. */
     public long[][] playerPenTime = new long[2][Rules.TEAM_SIZE];
     /** Pushing counters for each team, 0:left side, 1:right side. */
     public int[] pushes = {0, 0};
