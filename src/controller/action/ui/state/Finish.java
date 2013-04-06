@@ -47,6 +47,7 @@ public class Finish extends GCAction
             byte tmp = data.team[0].teamColor;
             data.team[0].teamColor = data.team[1].teamColor;
             data.team[1].teamColor = tmp;
+            data.kickOffTeam = data.kickOffTeam == GameControlData.TEAM_BLUE ? GameControlData.TEAM_RED : GameControlData.TEAM_BLUE;
             FirstHalf.changeSide(data);
         }
         Log.state(data, "State set to Finished");

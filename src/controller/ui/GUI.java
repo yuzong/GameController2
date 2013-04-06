@@ -91,7 +91,7 @@ public class GUI extends JFrame implements GCGUI
     private Font timeSubFont;
     private Font timeoutFont;
     private Font stateFont;
-    private SimpleDateFormat clockFormat = new SimpleDateFormat("m:ss");
+    private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
     private ImageIcon clockImgReset;
     private ImageIcon clockImgPlay;
     private ImageIcon clockImgPause;

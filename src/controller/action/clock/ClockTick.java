@@ -7,6 +7,7 @@ import controller.action.GCAction;
 import controller.action.ui.penalty.Pushing;
 import data.AdvancedData;
 import data.GameControlData;
+import data.Rules;
 
 
 /**
@@ -131,12 +132,14 @@ public class ClockTick extends GCAction
     }
     
     public boolean isClockRunning(AdvancedData data) {
+        boolean halfNotStarted = (data.firstHalf == GameControlData.C_TRUE ?
+                data.firstHalfTime : data.secondHalfTime) == Rules.HALF_TIME*1000;
         return ( !( (data.gameState == GameControlData.STATE_INITIAL)
          || (data.gameState == GameControlData.STATE_FINISHED)
          || (
                 ( (data.gameState == GameControlData.STATE_READY)
                || (data.gameState == GameControlData.STATE_SET) )
-                && (data.fulltime)
+                && (data.fulltime || halfNotStarted)
                 )
          || data.manPause )
          || data.manPlay       );
