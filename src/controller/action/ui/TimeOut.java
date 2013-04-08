@@ -60,9 +60,12 @@ public class TimeOut extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return data.timeOutActive[side]
-            || ( (data.numberOfTimeOuts[side] < Rules.TIME_OUT_MAX_NUMBER)
-              && !data.timeOutActive[side == 0 ? 1 : 0] )
+      return data.timeOutActive[side]
+            || ( (data.gameState == GameControlData.STATE_INITIAL ||
+                  data.gameState == GameControlData.STATE_READY ||
+                  data.gameState == GameControlData.STATE_SET)
+                && data.numberOfTimeOuts[side] < Rules.TIME_OUT_MAX_NUMBER
+                && !data.timeOutActive[side == 0 ? 1 : 0])
             || data.testmode;
     }
 }

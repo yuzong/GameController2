@@ -72,6 +72,9 @@ public class FirstHalf extends GCAction
         data.team[0].score = data.team[1].score;
         data.team[1].score = tmpScore;
         
+        int tmpTimeOuts = data.numberOfTimeOuts[0];
+        data.numberOfTimeOuts[0] = data.numberOfTimeOuts[1];
+        data.numberOfTimeOuts[1] = tmpTimeOuts;
         boolean tmpTimeOut = data.timeOutActive[0];
         data.timeOutActive[0] = data.timeOutActive[1];
         data.timeOutActive[1] = tmpTimeOut;

@@ -36,8 +36,7 @@ public class Play extends GCAction
             return;
         }
         data.gameState = GameControlData.STATE_PLAYING;
-        if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
-        {
+        if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
             data.remainingKickoffBlocked = Rules.KICKOFF_TIME*1000;
         } else {
             data.remainingKickoffBlocked = -10*1000;

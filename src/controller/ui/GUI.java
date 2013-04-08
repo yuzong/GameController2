@@ -46,6 +46,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String BACKGROUND_MID = "config/icons/field.png";
     private static final String BACKGROUND_CLOCK = "config/icons/time_ground.png";
     private static final String KICKOFF = "Kickoff";
+    private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
     private static final String PUSHES = "Pushes";
     private static final String REJECTED = "Ejected";
     private static final String ONLINE = "config/icons/wlan_status_green.png";
@@ -660,6 +661,11 @@ public class GUI extends JFrame implements GCGUI
         kickOff[data.team[0].teamColor == data.kickOffTeam ? 0 : 1].setSelected(true);
         for(int i=0; i<2; i++) {
             kickOff[i].setEnabled(ActionBoard.kickOff[i].isLegal(data));
+            if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+                kickOff[i].setText(KICKOFF);
+            } else {
+                kickOff[i].setText(KICKOFF_PENALTY_SHOOTOUT);
+            }
         }
     }
     
@@ -817,7 +823,9 @@ public class GUI extends JFrame implements GCGUI
             undo[i].setVisible(!undos[i].equals(""));
             undo[i].setEnabled(!undos[i].contains(" vs "));
             if ((highlightEvent == ActionBoard.undo[i+1]) && (!ActionBoard.undo[i+1].executed))
+            {
                 undoFromHere = true;
+            }
             if (undoFromHere) {
                 undo[i].setText("<html><center>Undo '"+undos[i] + "\'?");
                 undo[i].setSelected(true);
@@ -888,7 +896,7 @@ public class GUI extends JFrame implements GCGUI
     private void highlight(AbstractButton button, boolean highlight)
     {
         button.setBackground(highlight ? COLOR_HIGHLIGHT : COLOR_STANDARD);
-        if (IS_OSX) {
+        if(IS_OSX) {
             button.setOpaque(highlight);
             button.setBorderPainted(!highlight);
         }
