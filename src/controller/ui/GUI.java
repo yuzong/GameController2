@@ -822,8 +822,7 @@ public class GUI extends JFrame implements GCGUI
         for(int i=undo.length - 1; i >= 0; i--) {
             undo[i].setVisible(!undos[i].equals(""));
             undo[i].setEnabled(!undos[i].contains(" vs "));
-            if ((highlightEvent == ActionBoard.undo[i+1]) && (!ActionBoard.undo[i+1].executed))
-            {
+            if ((highlightEvent == ActionBoard.undo[i+1]) && (!ActionBoard.undo[i+1].executed)) {
                 undoFromHere = true;
             }
             if (undoFromHere) {

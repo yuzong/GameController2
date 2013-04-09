@@ -39,30 +39,40 @@ public class Sender extends Thread {
      * @throws SocketException      if an error occurs while creating the socket
      * @throws UnknownHostException if the used inet-address is not valid
      */
-    private Sender() throws SocketException, UnknownHostException {
+    private Sender(final String broadcastAddress) throws SocketException, UnknownHostException {
         instance = this;
 
         this.datagramSocket = new DatagramSocket();
-        this.group = InetAddress.getByName("255.255.255.255");
+        this.group = InetAddress.getByName(broadcastAddress);
     }
 
     /**
-     * Returns the instance of the singleton. If the Sender wasn't initialized once before, a new instance will
-     * be created and returned (lazy instantiation)
+     * Initialises the Sender. This needs to be called before {@link #getInstance()} is available.
+     * @param broadcastAddress      the broadcast address to use
+     * @throws SocketException          if an error occurs while creating the socket
+     * @throws UnknownHostException     if the used inet-address is not valid
+     * @throws IllegalStateException    if the sender is already initialized
+     */
+    public synchronized static void initialize(final String broadcastAddress) throws SocketException, UnknownHostException {
+        if (null != instance) {
+            throw new IllegalStateException("sender is already initialized");
+        } else {
+            instance = new Sender(broadcastAddress);
+        }
+    }
+
+    /**
+     * Returns the instance of the singleton.
      *
      * @return  The instance of the Sender
-     * @throws IllegalStateException if the first creation of the singleton throws an exception
+     * @throws  IllegalStateException if the Sender is not initialized yet
      */
     public synchronized static Sender getInstance() {
-        if (instance == null) {
-            try {
-                instance = new Sender();
-            } catch (Exception e) {
-                throw new IllegalStateException("fatal: Error while setting up Sender.", e);
-            }
+        if (null == instance) {
+            throw new IllegalStateException("sender is not initialized yet");
+        } else {
+            return instance;
         }
-
-        return instance;
     }
 
     /**

@@ -57,7 +57,7 @@ public class Main
         }
 
         //collect the start parameters and put them into the first data.
-        StartInput input = new StartInput();
+        StartInput input = new StartInput(args);
         while(!input.finished) {
             try{
             Thread.sleep(100);
@@ -72,6 +72,7 @@ public class Main
 
         try {
             //sender
+            Sender.initialize(input.outBroadcastAddress);
             Sender sender = Sender.getInstance();
             sender.send(data);
             sender.start();
@@ -94,6 +95,7 @@ public class Main
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-S");
         Log.init("log_"+df.format(new Date(System.currentTimeMillis()))+".txt");
         Log.toFile("Fulltime = "+data.fulltime);
+        Log.toFile("Using broadcast address " + input.outBroadcastAddress);
 
         //ui
         ActionBoard.init();

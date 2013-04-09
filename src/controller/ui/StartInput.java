@@ -11,15 +11,13 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.Serializable;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+import java.util.regex.Pattern;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 
 /**
@@ -29,6 +27,12 @@ import javax.swing.JRadioButton;
  */
 public class StartInput extends JFrame implements Serializable
 {
+    private static Pattern IPV4_PATTERN;
+
+    static {
+        IPV4_PATTERN = Pattern.compile("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
+    }
+
     /**
      * Some constants defining this GUI`s appearance as their names say.
      * Feel free to change them and see what happens.
@@ -43,6 +47,8 @@ public class StartInput extends JFrame implements Serializable
     private static final int OPTIONS_HEIGHT = 30;
     /** This is not what the name says ;) */
     private static final int FULLSCREEN_WIDTH = 100;
+    private static final int BROADCAST_WIDTH = 125;
+    private static final int BROADCAST_HEIGHT = 25;
     private static final String[] BACKGROUND_SIDE = {"config/icons/robot_left_blue.png",
                                                         "config/icons/robot_right_red.png"};
     private static final String FULLTIME_LABEL_NO = "10 minutes playing and pause";
@@ -63,11 +69,14 @@ public class StartInput extends JFrame implements Serializable
      * is recommended.
      */
     private boolean fulltimeOK = false;
+
+    private boolean broadcastAddressOk = false;
     
     /** The inputs that can be read from this GUI when it has finished. */
     public int[] outTeam = {0, 0};
     public boolean outFulltime;
     public boolean outFullscreen;
+    public String outBroadcastAddress;
     
     /** All the components of this GUI. */
     private ImagePanel[] teamContainer = new ImagePanel[2];
@@ -80,13 +89,15 @@ public class StartInput extends JFrame implements Serializable
     private JRadioButton fulltime;
     private ButtonGroup fulltimeGroup;
     private Checkbox fullscreen;
+    private JLabel broadcastAddressLabel;
+    private JTextField broadcastAddressInput;
     private JButton start;
     
     
     /**
      * Creates a new StartInput.
      */
-    public StartInput()
+    public StartInput(final String[] args)
     {
         super(WINDOW_TITLE);
         //layout
@@ -137,14 +148,52 @@ public class StartInput extends JFrame implements Serializable
                 }
             }
         );
-        
+
         optionsRight = new JPanel();
         optionsRight.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
+        optionsRight.setLayout(new BoxLayout(optionsRight, BoxLayout.PAGE_AXIS));
         add(optionsRight);
+
+        JPanel fullscreenPanel = new JPanel();
+        fullscreenPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        optionsRight.add(fullscreenPanel);
+        JPanel broadcastAddressPanel = new JPanel();
+        broadcastAddressPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        optionsRight.add(broadcastAddressPanel);
+
         fullscreen = new Checkbox(FULLSCREEN_LABEL);
         fullscreen.setPreferredSize(new Dimension(FULLSCREEN_WIDTH, OPTIONS_HEIGHT));
         fullscreen.setState(true);
-        optionsRight.add(fullscreen);
+        fullscreenPanel.add(fullscreen);
+        broadcastAddressLabel = new JLabel("Broadcast:");
+        broadcastAddressPanel.add(broadcastAddressLabel);
+        broadcastAddressInput = new JTextField();
+        broadcastAddressInput.setPreferredSize(new Dimension(BROADCAST_WIDTH, BROADCAST_HEIGHT));
+        broadcastAddressInput.setText(getDefaultBroadcastAddress(args));
+        broadcastAddressOk = true; // setText does not trigger change event...
+        broadcastAddressInput.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                validateBroadcast();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                validateBroadcast();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                validateBroadcast();
+            }
+
+            private void validateBroadcast() {
+                broadcastAddressOk = IPV4_PATTERN.matcher(broadcastAddressInput.getText()).matches();
+                startEnableing();
+            }
+        });
+        broadcastAddressPanel.add(broadcastAddressInput);
+
         optionsLeft = new JPanel();
         optionsLeft.setPreferredSize(new Dimension(WINDOW_WIDTH/2-2*STANDARD_SPACE, OPTIONS_CONTAINER_HEIGHT));
         add(optionsLeft);
@@ -181,10 +230,19 @@ public class StartInput extends JFrame implements Serializable
             @Override
                 public void actionPerformed(ActionEvent e) {
                     outFullscreen = fullscreen.getState();
+                    outBroadcastAddress = broadcastAddressInput.getText();
                     finished = true;
                 }});
                 
         setVisible(true);
+    }
+
+    private String getDefaultBroadcastAddress(final String[] args) {
+        String defaultBroadcastAddress = "255.255.255.255";
+        if (args.length >= 2 && (args[0].equals("-b") || args[0].equals("--broadcast"))) {
+            defaultBroadcastAddress = args[1];
+        }
+        return defaultBroadcastAddress;
     }
     
     /**
@@ -213,7 +271,7 @@ public class StartInput extends JFrame implements Serializable
      */
     private void startEnableing()
     {
-        start.setEnabled(teamsOK && fulltimeOK);
+        start.setEnabled(teamsOK && fulltimeOK && broadcastAddressOk);
     }
     
     /**
