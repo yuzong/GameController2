@@ -76,6 +76,7 @@ public class AdvancedData extends GameControlData
         penaltyShootTime = data.penaltyShootTime;
         remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;
+        remainingKickoffBlocked = data.remainingKickoffBlocked;
         playerPenTime = new long[2][Rules.TEAM_SIZE];
         for(int i=0; i<2; i++) {
             for(int j=0; j<playerPenTime[i].length; j++) {
@@ -127,6 +128,7 @@ public class AdvancedData extends GameControlData
         penaltyShootTime = data.penaltyShootTime;
         remainingReady = data.remainingReady;
         remainingPaused = data.remainingPaused;
+        remainingKickoffBlocked = data.remainingKickoffBlocked;
         for(int i=0; i<2; i++) {
             for(int j=0; j<playerPenTime[i].length; j++) {
                 if(team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
