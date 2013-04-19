@@ -1,9 +1,8 @@
 package controller.action.ui.state;
 
-import controller.action.GCAction;
 import controller.Log;
-import controller.action.ActionBoard;
 import controller.action.ActionType;
+import controller.action.GCAction;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Rules;
@@ -37,7 +36,6 @@ public class Set extends GCAction
             return;
         }
         data.gameState = GameControlData.STATE_SET;
-        ActionBoard.clock.resetPlayerPenTime(data);
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             data.penaltyShootTime = Rules.PENALTY_SHOOT_TIME*1000;
         }

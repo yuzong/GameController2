@@ -1,6 +1,7 @@
 package controller.action.ui;
 
 import controller.Log;
+import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
@@ -42,6 +43,7 @@ public class GlobalStuck extends GCAction
         data.kickOffTeam = data.team[side].teamColor;
         data.gameState = GameControlData.STATE_READY;
         data.remainingReady = Rules.READY_TIME*1000;
+        ActionBoard.clock.resetPlayerPenTime(data);
         Log.state(data, "Global Game Stuck Kickoff "+Rules.TEAM_COLOR_NAME[data.team[side].teamColor]);
     }
     

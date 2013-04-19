@@ -2,6 +2,7 @@ package controller.action.ui;
 
 import controller.action.GCAction;
 import controller.Log;
+import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.ui.half.FirstHalf;
 import data.AdvancedData;
@@ -51,12 +52,8 @@ public class Goal extends GCAction
             if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
                 data.gameState = GameControlData.STATE_READY;
                 data.remainingReady = Rules.READY_TIME*1000;
-                if(Math.abs(data.team[0].score-data.team[1].score) >= 10) {
-                    data.gameState = GameControlData.STATE_FINISHED;
-                    Log.state(data, "Goal - Mercy-Rule!");
-                } else {
-                    Log.state(data, "Goal for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
-                }
+                ActionBoard.clock.resetPlayerPenTime(data);
+                Log.state(data, "Goal for Team "+Teams.getNames(false)[data.team[side].teamNumber]);
             } else {
                 data.gameState = GameControlData.STATE_FINISHED;
                 byte tmp = data.team[0].teamColor;

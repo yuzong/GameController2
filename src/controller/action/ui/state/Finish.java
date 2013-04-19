@@ -2,6 +2,7 @@ package controller.action.ui.state;
 
 import controller.action.GCAction;
 import controller.Log;
+import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.ui.half.FirstHalf;
 import data.AdvancedData;
@@ -38,6 +39,7 @@ public class Finish extends GCAction
         }
         data.gameState = GameControlData.STATE_FINISHED;
         if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            ActionBoard.clock.resetPlayerPenTime(data);
             if(data.firstHalf == GameControlData.C_TRUE) {
                 data.remainingPaused = Rules.PAUSE_TIME*1000;
             } else {
