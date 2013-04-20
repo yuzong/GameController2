@@ -132,6 +132,8 @@ public class GameControlData
      * Unpacking the C-structure to the Java class.
      * 
      * @param buffer    The buffered C-structure.
+     * @return Whether the structure was well formed. That is, it must have the proper 
+     *          {@link #GAMECONTROLLER_STRUCT_VERSION} set.
      */
     public boolean fromByteArray(ByteBuffer buffer)
     {

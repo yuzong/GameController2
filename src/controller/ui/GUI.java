@@ -23,6 +23,8 @@ import javax.swing.*;
  */
 public class GUI extends JFrame implements GCGUI
 {
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Some constants defining this GUI`s appearance as their names say.
      * Feel free to change them and see what happens.
@@ -416,6 +418,9 @@ public class GUI extends JFrame implements GCGUI
      */
     class ImagePanel extends JPanel
     {
+        private static final long serialVersionUID = 1L;
+        
+        
         /** The image that is shown in the background. */
         private Image image;
 
@@ -462,6 +467,9 @@ public class GUI extends JFrame implements GCGUI
      */
     class ImageButton extends JButton
     {
+        private static final long serialVersionUID = 1L;
+        
+        
         /** The image that is shown in the background. */
         private Image image;
 

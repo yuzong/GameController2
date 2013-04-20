@@ -1,6 +1,5 @@
 package controller.action.clock;
 
-import controller.EventHandler;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
@@ -143,12 +142,13 @@ public class ClockTick extends GCAction
     }
     
     /**
-     * Sets the penelise time for the specific player. Use this instead of just
+     * Sets the penalize time for the specific player. Use this instead of just
      * setting secsTillUnpenalised.
      * 
      * @param data      The current data to work on.
-     * @param side      The player`s side (0:left, 1:right).
-     * @param seconds   Penalise for that much seconds.
+     * @param side      The player's side (0:left, 1:right).
+     * @param number    The player's number
+     * @param seconds   Penalize for that much seconds.
      */
     public void setPlayerPenTime(AdvancedData data, int side, int number, int seconds)
     {
@@ -157,8 +157,8 @@ public class ClockTick extends GCAction
     }
     
     /**
-     * Resettes the penalise time of all players to 0.
-     * This does not unpenalise them!
+     * Resets the penalize time of all players to 0.
+     * This does not unpenalize them!
      * 
      * @param data      The current data to work on.
      */
@@ -172,7 +172,7 @@ public class ClockTick extends GCAction
     }
     
     /**
-     * Resettes the time since last drop in.
+     * Resets the time since last drop in.
      * Use this instead of just setting dropInTime.
      * 
      * @param data      The current data to work on.

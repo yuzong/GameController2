@@ -66,6 +66,7 @@ public class TeamInfo
     
     /**
      * Packing this Java class to the C-structure to be send.
+     * @return Byte array representing the C-structure.
      */
     public byte[] toByteArray()
     {

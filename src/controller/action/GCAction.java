@@ -63,6 +63,7 @@ public abstract class GCAction implements ActionListener
      * to override this if not needed.
      * 
      * @param data      The current data to work on.
+     * @param player    The player on which the action is to be performed.
      * @param side      The side this player is playing for, 0: left, 1: right
      * @param number    The players number, beginning at 0!
      */

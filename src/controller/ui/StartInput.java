@@ -11,8 +11,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 import javax.swing.*;
@@ -27,6 +25,7 @@ import javax.swing.event.DocumentListener;
  */
 public class StartInput extends JFrame implements Serializable
 {
+    private static final long serialVersionUID = 1L;
     private static Pattern IPV4_PATTERN;
 
     static {
@@ -82,7 +81,8 @@ public class StartInput extends JFrame implements Serializable
     private ImagePanel[] teamContainer = new ImagePanel[2];
     private ImageIcon[] teamIcon = new ImageIcon[2];
     private JLabel[] teamIconLabel = new JLabel[2];
-    private JComboBox[] team = new JComboBox[2];
+    @SuppressWarnings("unchecked")
+    private JComboBox<String>[] team = new JComboBox[2];
     private JPanel optionsLeft;
     private JPanel optionsRight;
     private JRadioButton nofulltime;
@@ -96,6 +96,7 @@ public class StartInput extends JFrame implements Serializable
     
     /**
      * Creates a new StartInput.
+     * @param args The parameters that the jar file was started with.
      */
     public StartInput(final String[] args)
     {
@@ -117,7 +118,7 @@ public class StartInput extends JFrame implements Serializable
             setTeamIcon(i, 0);
             teamIconLabel[i] = new JLabel(teamIcon[i]);
             teamContainer[i].add(teamIconLabel[i], BorderLayout.CENTER);
-            team[i] = new JComboBox(Teams.getNames(true));
+            team[i] = new JComboBox<String>(Teams.getNames(true));
             teamContainer[i].add(team[i], BorderLayout.SOUTH);
         }
         team[0].addActionListener(new ActionListener()
@@ -281,6 +282,8 @@ public class StartInput extends JFrame implements Serializable
      */
     class ImagePanel extends JPanel
     {
+        private static final long serialVersionUID = 1L;
+        
         /** The image that is shown in the background. */
         private Image image;
 

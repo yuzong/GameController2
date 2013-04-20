@@ -138,6 +138,7 @@ public class Teams
      * Loads a team`s icon.
      * You dont need to use this because the getIcon method automatically
      * uses this if needed.
+     * @param team Number of the team which icon should be read.
      */
     public static void readIcon(int team)
     {
