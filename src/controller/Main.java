@@ -5,11 +5,12 @@ import controller.net.Receiver;
 import controller.net.Sender;
 import controller.ui.GCGUI;
 import controller.ui.GUI;
-import controller.ui.KeyboardListener;
 import controller.ui.StartInput;
 import data.AdvancedData;
 import data.GameControlData;
 import data.Teams;
+
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +31,11 @@ public class Main
      * to be written into the log file.
      */
     public static final String version = "GC2 1.0";
+    
+    /** Relative directory of where logs are stored */
+    private final static String LOG_DIRECTORY = "logs";
+    
+    
     
     /**
      * The programm starts here.
@@ -93,7 +99,15 @@ public class Main
 
         //log
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-S");
-        Log.init("log_"+df.format(new Date(System.currentTimeMillis()))+".txt");
+        
+        final File logDir = new File(LOG_DIRECTORY);
+        if (!logDir.exists() && !logDir.mkdirs()) {
+            Log.init("log_"+df.format(new Date(System.currentTimeMillis()))+".txt");
+        } else {
+            final File logFile = new File(logDir, 
+                "log_"+df.format(new Date(System.currentTimeMillis()))+".txt");
+            Log.init(logFile.getPath());
+        }
         Log.toFile("Fulltime = "+data.fulltime);
         Log.toFile("Using broadcast address " + input.outBroadcastAddress);
 
@@ -101,7 +115,6 @@ public class Main
         ActionBoard.init();
         Log.state(data, Teams.getNames(false)[data.team[0].teamNumber] +" vs "+Teams.getNames(false)[data.team[1].teamNumber]);
         GCGUI gui = new GUI(input.outFullscreen, data);
-        KeyboardListener kui = new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);
         gui.update(data);
 

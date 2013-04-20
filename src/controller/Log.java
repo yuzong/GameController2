@@ -44,6 +44,9 @@ public class Log
      */
     public synchronized static void init(String path)
     {
+        if (instance != null) {
+            throw new IllegalStateException("logger already initialized");
+        }
         instance = new Log();
         try{
             instance.file = new FileWriter(new File(path));
