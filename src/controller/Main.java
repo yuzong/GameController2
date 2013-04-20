@@ -5,6 +5,7 @@ import controller.net.Receiver;
 import controller.net.Sender;
 import controller.ui.GCGUI;
 import controller.ui.GUI;
+import controller.ui.KeyboardListener;
 import controller.ui.StartInput;
 import data.AdvancedData;
 import data.GameControlData;
@@ -115,6 +116,7 @@ public class Main
         ActionBoard.init();
         Log.state(data, Teams.getNames(false)[data.team[0].teamNumber] +" vs "+Teams.getNames(false)[data.team[1].teamNumber]);
         GCGUI gui = new GUI(input.outFullscreen, data);
+        new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);
         gui.update(data);
 
