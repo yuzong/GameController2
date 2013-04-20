@@ -81,8 +81,7 @@ public class StartInput extends JFrame implements Serializable
     private ImagePanel[] teamContainer = new ImagePanel[2];
     private ImageIcon[] teamIcon = new ImageIcon[2];
     private JLabel[] teamIconLabel = new JLabel[2];
-    @SuppressWarnings("unchecked")
-    private JComboBox<String>[] team = new JComboBox[2];
+    private JComboBox[] team = new JComboBox[2];
     private JPanel optionsLeft;
     private JPanel optionsRight;
     private JRadioButton nofulltime;
@@ -98,6 +97,7 @@ public class StartInput extends JFrame implements Serializable
      * Creates a new StartInput.
      * @param args The parameters that the jar file was started with.
      */
+    @SuppressWarnings("unchecked")
     public StartInput(final String[] args)
     {
         super(WINDOW_TITLE);
@@ -118,7 +118,7 @@ public class StartInput extends JFrame implements Serializable
             setTeamIcon(i, 0);
             teamIconLabel[i] = new JLabel(teamIcon[i]);
             teamContainer[i].add(teamIconLabel[i], BorderLayout.CENTER);
-            team[i] = new JComboBox<String>(Teams.getNames(true));
+            team[i] = new JComboBox(Teams.getNames(true));
             teamContainer[i].add(team[i], BorderLayout.SOUTH);
         }
         team[0].addActionListener(new ActionListener()
