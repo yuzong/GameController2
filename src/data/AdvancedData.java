@@ -44,6 +44,8 @@ public class AdvancedData extends GameControlData
     public boolean[] timeOutActive = {false, false};
     /** TimeOut counters for each team, 0:left side, 1:right side. */
     public int[] numberOfTimeOuts = {0, 0};
+    /** how many penalty-shoots have been made by each team, 0:left side, 1:right side. */
+    public int[] penaltyShoot = {0, 0};
     /** If true, the clock has manually been paused in the testmode. */
     public boolean manPause = false;
     /** If true, the clock has manually been started in the testmode. */
@@ -96,6 +98,10 @@ public class AdvancedData extends GameControlData
         numberOfTimeOuts = new int[2];
         numberOfTimeOuts[0] = data.numberOfTimeOuts[0];
         numberOfTimeOuts[1] = data.numberOfTimeOuts[1];
+        penaltyShoot = new int[2];
+        penaltyShoot[0] = data.penaltyShoot[0];
+        penaltyShoot[0] = data.penaltyShoot[0];
+        fulltime = data.fulltime;
         manPause = data.manPause;
         manPlay = data.manPlay;
     }

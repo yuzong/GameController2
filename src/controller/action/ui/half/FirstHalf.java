@@ -82,6 +82,10 @@ public class FirstHalf extends GCAction
         data.timeOut[0] = data.timeOut[1];
         data.timeOut[1] = tmpTimeOutTime;
         
+        int tmpPenaltyShoot = data.penaltyShoot[0];
+        data.penaltyShoot[0] = data.penaltyShoot[1];
+        data.penaltyShoot[1] = tmpPenaltyShoot;
+        
         for(int i=0; i<2; i++) {
             data.pushes[i] = 0;
         }

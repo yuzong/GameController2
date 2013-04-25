@@ -40,6 +40,7 @@ public class Play extends GCAction
             data.remainingKickoffBlocked = Rules.KICKOFF_TIME*1000;
         } else {
             data.remainingKickoffBlocked = -10*1000;
+            data.penaltyShoot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]++;
         }
         Log.state(data, "State set to Playing");
     }

@@ -24,10 +24,18 @@ public class Rules
     public static final int PAUSE_TIME = 10*60;
     /** Time in seconds the ball is blocked after kickoff. */
     public static final int KICKOFF_TIME = 10;
+    /** Time in seconds before a global game stuck can be called. */
+    public static final int MIN_DURATION_BEFORE_GLOBAL_GAME_STUCK = 30;
     /** Time in seconds between second half and penalty shoot. */
     public static final int PAUSE_PENALTY_SHOOT_TIME = 5*60;
     /** Time in seconds one penalty shoot is long. */
     public static final int PENALTY_SHOOT_TIME = 1*60;
+    /** Time in seconds one penalty shoot is long in sudden-death. */
+    public static final int PENALTY_SHOOT_TIME_SUDDEN_DEATH = 2*60;
+    /** Number of penalty-shoots for each team when a half has 10minutes. */
+    public static final int NUMBER_OF_PENALTY_SHOOTS_SHORT = 3;
+    /** Number of penalty-shoots for each team after full 10minutes playing. */
+    public static final int NUMBER_OF_PENALTY_SHOOTS_LONG = 5;
     /** Time in seconds normal penalties take. */
     public static final int PENALTY_STANDARD_TIME = 30;
     /** Time in seconds a robot is taken out when manually penalized (ChestButton). */

@@ -50,6 +50,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String KICKOFF = "Kickoff";
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
     private static final String PUSHES = "Pushes";
+    private static final String SHOOTS = "Shoot";
     private static final String REJECTED = "Ejected";
     private static final String ONLINE = "config/icons/wlan_status_green.png";
     private static final String OFFLINE = "config/icons/wlan_status_red.png";
@@ -57,6 +58,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String UNKNOWN_ONLINE_STATUS = "config/icons/wlan_status_grey.png";
     private static final String TIMEOUT = "Timeout";
     private static final String STUCK = "Global<br/>Game<br/>Stuck";
+    private static final String KICKOFF_GOAL = "Kickoff Goal";
     private static final String OUT = "Out";
     private static final String STATE_INITIAL = "Initial";
     private static final String STATE_READY = "Ready";
@@ -685,7 +687,12 @@ public class GUI extends JFrame implements GCGUI
     private void updatePushes(AdvancedData data)
     {
         for(int i=0; i<2; i++) {
-            pushes[i].setText(PUSHES+": "+data.pushes[i]);
+            if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
+            {
+                pushes[i].setText(PUSHES+": "+data.pushes[i]);
+            } else {
+                pushes[i].setText(SHOOTS+": "+data.penaltyShoot[i]);
+            }
         }
     }
     
@@ -768,10 +775,27 @@ public class GUI extends JFrame implements GCGUI
     private void updateGlobalStuck(AdvancedData data)
     {
         for(int i=0; i<2; i++) {
-            stuck[i].setEnabled(ActionBoard.stuck[i].isLegal(data));
-            stuck[i].setText("<html><center>"
-                    +(ActionBoard.stuck[i].isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")
-                    +STUCK);
+            if(data.gameState == GameControlData.STATE_PLAYING
+                    && -1*(data.remainingKickoffBlocked - Rules.KICKOFF_TIME*1000) < Rules.MIN_DURATION_BEFORE_GLOBAL_GAME_STUCK*1000)
+            {
+                if(data.kickOffTeam == data.team[i].teamColor)
+                {
+                    stuck[i].setEnabled(true);
+                    stuck[i].setText("<html><center>"
+                        +"<font color=#000000>"
+                        +KICKOFF_GOAL);
+                } else {
+                    stuck[i].setEnabled(false);
+                    stuck[i].setText("<html><center>"
+                        +"<font color=#808080>"
+                        +STUCK);
+                }
+            } else {
+                stuck[i].setEnabled(ActionBoard.stuck[i].isLegal(data));
+                stuck[i].setText("<html><center>"
+                        +(ActionBoard.stuck[i].isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")
+                        +STUCK);
+            }
         }
     }
     
