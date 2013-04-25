@@ -51,14 +51,28 @@ public class RobotWatcher
      */
     public static synchronized void update(GameControlReturnData gameControlReturnData)
     {
-        int team = EventHandler.getInstance().data.team[0].teamNumber == gameControlReturnData.team ? 0 : 1;
-        instance.robotsLastAnswer[team][gameControlReturnData.player-1] = System.currentTimeMillis();
-        if(instance.robotsLastMessage[team][gameControlReturnData.player-1] != gameControlReturnData.message) {
-            instance.robotsLastMessage[team][gameControlReturnData.player-1] = gameControlReturnData.message;
+        int team, number;
+        if(gameControlReturnData.team == EventHandler.getInstance().data.team[0].teamNumber)
+        {
+            team = 0;
+        } else if(gameControlReturnData.team == EventHandler.getInstance().data.team[1].teamNumber)
+        {
+            team = 1;
+        } else {
+            return;
+        }
+        number = gameControlReturnData.player;
+        if(number <= 0 || number > Rules.TEAM_SIZE)
+        {
+            return;
+        }
+        instance.robotsLastAnswer[team][number-1] = System.currentTimeMillis();
+        if(instance.robotsLastMessage[team][number-1] != gameControlReturnData.message) {
+            instance.robotsLastMessage[team][number-1] = gameControlReturnData.message;
             if(gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_PENALISE) {
-                ActionBoard.manualPen[team][gameControlReturnData.player-1].actionPerformed(null);
+                ActionBoard.manualPen[team][number-1].actionPerformed(null);
             } else if(gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE) {
-                ActionBoard.manualUnpen[team][gameControlReturnData.player-1].actionPerformed(null);
+                ActionBoard.manualUnpen[team][number-1].actionPerformed(null);
             }
         }
     }

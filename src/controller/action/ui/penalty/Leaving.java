@@ -70,7 +70,6 @@ public class Leaving extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return (data.gameState == GameControlData.STATE_READY)
-            || (data.gameState == GameControlData.STATE_SET) 
             || (data.gameState == GameControlData.STATE_PLAYING)
             || (data.testmode);
     }
