@@ -1,6 +1,7 @@
 package controller.action.ui.state;
 
 import controller.Log;
+import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.AdvancedData;
@@ -36,6 +37,7 @@ public class Set extends GCAction
             return;
         }
         data.gameState = GameControlData.STATE_SET;
+        ActionBoard.clock.resetPlayerPenTime(data);
         if(data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
             if(data.penaltyShoot[data.kickOffTeam == data.team[0].teamColor ? 0 : 1]
                     >= (!data.fulltime ? Rules.NUMBER_OF_PENALTY_SHOOTS_SHORT : Rules.NUMBER_OF_PENALTY_SHOOTS_LONG))
