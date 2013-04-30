@@ -100,13 +100,20 @@ public class ClockTick extends GCAction
                 }
             }
 
-            if( (data.gameState == GameControlData.STATE_FINISHED)
-             && (data.secGameState == GameControlData.STATE2_NORMAL) ) {
+            if(data.remainingPaused > 0) {
                 data.remainingPaused -= timeElapsed;
                 if(data.remainingPaused <= 0) {
-                    if(data.firstHalf == GameControlData.C_TRUE) {
+                    data.remainingPaused = 0;
+                }
+            }
+            if( (data.gameState == GameControlData.STATE_FINISHED)
+             && (data.secGameState == GameControlData.STATE2_NORMAL) ) {
+                if(data.firstHalf == GameControlData.C_TRUE) {
+                    if(data.remainingPaused <= Rules.PAUSE_TIME*1000/2) {
                         ActionBoard.secondHalf.perform(data);
-                    } else {
+                    }
+                } else {
+                    if(data.remainingPaused <= Rules.PAUSE_PENALTY_SHOOT_TIME*1000/2) {
                         ActionBoard.penaltyShoot.perform(data);
                     }
                 }

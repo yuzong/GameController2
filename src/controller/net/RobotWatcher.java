@@ -52,18 +52,15 @@ public class RobotWatcher
     public static synchronized void update(GameControlReturnData gameControlReturnData)
     {
         int team, number;
-        if(gameControlReturnData.team == EventHandler.getInstance().data.team[0].teamNumber)
-        {
+        if(gameControlReturnData.team == EventHandler.getInstance().data.team[0].teamNumber) {
             team = 0;
-        } else if(gameControlReturnData.team == EventHandler.getInstance().data.team[1].teamNumber)
-        {
+        } else if(gameControlReturnData.team == EventHandler.getInstance().data.team[1].teamNumber) {
             team = 1;
         } else {
             return;
         }
         number = gameControlReturnData.player;
-        if(number <= 0 || number > Rules.TEAM_SIZE)
-        {
+        if(number <= 0 || number > Rules.TEAM_SIZE) {
             return;
         }
         instance.robotsLastAnswer[team][number-1] = System.currentTimeMillis();

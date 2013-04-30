@@ -45,5 +45,5 @@ public class Rules
     /** How many times a team may take a timeOut. */
     public static final int TIME_OUT_MAX_NUMBER = 1;
     /** On how many pushings is a robot ejected. */
-    public static final int[] PUSHES_TO_REJECTION = {4, 6, 8};
+    public static final int[] PUSHES_TO_EJECTION = {4, 6, 8, 10, 12};
 }

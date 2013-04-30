@@ -51,7 +51,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
     private static final String PUSHES = "Pushes";
     private static final String SHOOTS = "Shoot";
-    private static final String REJECTED = "Ejected";
+    private static final String EJECTED = "Ejected";
     private static final String ONLINE = "config/icons/wlan_status_green.png";
     private static final String OFFLINE = "config/icons/wlan_status_red.png";
     private static final String HIGH_LATENCY = "config/icons/wlan_status_yellow.png";
@@ -558,8 +558,9 @@ public class GUI extends JFrame implements GCGUI
         if(data.gameState == GameControlData.STATE_READY) {
             clockSub.setText(clockFormat.format(new Date(data.remainingReady+999)));
             clockSub.setForeground(Color.BLACK);
-        } else if( (data.gameState == GameControlData.STATE_FINISHED)
-                && (data.secGameState == GameControlData.STATE2_NORMAL) ) {
+        } else if( ( (data.gameState == GameControlData.STATE_FINISHED)
+                  || (data.gameState == GameControlData.STATE_INITIAL) )
+                && (data.remainingPaused > 0) ) {
             clockSub.setText(clockFormat.format(new Date(data.remainingPaused+999)));
             clockSub.setForeground(Color.BLACK);
         } else if( (data.gameState == GameControlData.STATE_PLAYING)
@@ -708,15 +709,16 @@ public class GUI extends JFrame implements GCGUI
             for(int j=0; j<robot[i].length; j++) {            
                 if(data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE) {
                     if(data.team[i].player[j].secsTillUnpenalised != Pushing.BANN_TIME) {
-                        if(data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP) {
-                            robotLabel[i][j].setText(PEN_PICKUP);
+                        if(data.team[i].player[j].secsTillUnpenalised == 0 
+                                && data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP) {
+                            robotLabel[i][j].setText(Rules.TEAM_COLOR_NAME[i]+" "+(j+1)+" ("+PEN_PICKUP+")");
                         } else {
-                            robotLabel[i][j].setText(clockFormat.format(new Date(data.team[i].player[j].secsTillUnpenalised*1000)));
+                            robotLabel[i][j].setText(Rules.TEAM_COLOR_NAME[i]+" "+(j+1)+": "+clockFormat.format(new Date(data.team[i].player[j].secsTillUnpenalised*1000)));
                         }
                         robotTime[i][j].setValue(100*data.team[i].player[j].secsTillUnpenalised/Rules.PENALTY_STANDARD_TIME);
                         robotTime[i][j].setVisible(true);
                     } else {
-                        robotLabel[i][j].setText(REJECTED);
+                        robotLabel[i][j].setText(EJECTED);
                         robotTime[i][j].setVisible(false);
                     }
                 } else {
@@ -726,9 +728,10 @@ public class GUI extends JFrame implements GCGUI
                 robot[i][j].setEnabled(ActionBoard.robot[i][j].isLegal(data));
                 highlight(robot[i][j],
                         (data.team[i].player[j].penalty != PlayerInfo.PENALTY_NONE)
-                        && (data.team[i].player[j].penalty != PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP)
                         && (data.team[i].player[j].secsTillUnpenalised <= UNPEN_HIGHLIGHT_SECONDS)
-                        && (robot[i][j].getBackground() != COLOR_HIGHLIGHT) );
+                        && (robot[i][j].getBackground() != COLOR_HIGHLIGHT
+                         || data.team[i].player[j].penalty == PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP
+                          && data.team[i].player[j].secsTillUnpenalised == 0) );
                 ImageIcon currentLanIcon;
                 if(onlineStatus[i][j] == RobotOnlineStatus.ONLINE) {
                     currentLanIcon = lanOnline;

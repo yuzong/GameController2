@@ -37,6 +37,7 @@ public class SecondHalf extends GCAction
             data.team[0].teamColor = GameControlData.TEAM_BLUE;
             data.team[1].teamColor = GameControlData.TEAM_RED;
             FirstHalf.changeSide(data);
+            data.kickOffTeam = GameControlData.TEAM_BLUE;
             data.gameState = GameControlData.STATE_INITIAL;
             Log.state(data, "Half set to SecondHalf");
         }

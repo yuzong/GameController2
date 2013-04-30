@@ -62,8 +62,8 @@ public class Pushing extends GCAction
         }
         
         boolean rejected = false;
-        for(int i=0; i<Rules.PUSHES_TO_REJECTION.length; i++) {
-            if(data.pushes[side] == Rules.PUSHES_TO_REJECTION[i]) {
+        for(int i=0; i<Rules.PUSHES_TO_EJECTION.length; i++) {
+            if(data.pushes[side] == Rules.PUSHES_TO_EJECTION[i]) {
                 rejected = true;
                 break;
             }

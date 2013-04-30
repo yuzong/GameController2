@@ -29,7 +29,7 @@ public class AdvancedData extends GameControlData
     /** Time in millis remaining in the ready state. */
     public long remainingReady = Rules.READY_TIME*1000;
     /** Time in millis remaining between first and second half. */
-    public long remainingPaused = Rules.PAUSE_TIME*1000;
+    public long remainingPaused = 0;
     /** Time in millis remaining until ball is unblocked after kickoff. */
     public long remainingKickoffBlocked = Rules.KICKOFF_TIME*1000;
     /** Time in millis remaining to be penalized for each layer. */
